@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.0.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"iondex.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="版本：Android Nougat 7.1.1_r6 源码：AndroidXRef 启动分析main_extractorservice.cpp 12345678910111213141516171819202122232425262728int main(int argc __unused, char** argv)&amp;#123;    &#x2F;&#x2F; 限制访问的物理内存数量为20%。    limitPro">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android 7.0 MediaExtractor 分析">
+<meta property="og:url" content="http://iondex.github.io/2020/10/04/android-mediaextractor/index.html">
+<meta property="og:site_name" content="Iondex&#39;s Blog">
+<meta property="og:description" content="版本：Android Nougat 7.1.1_r6 源码：AndroidXRef 启动分析main_extractorservice.cpp 12345678910111213141516171819202122232425262728int main(int argc __unused, char** argv)&amp;#123;    &#x2F;&#x2F; 限制访问的物理内存数量为20%。    limitPro">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-10-04T12:51:28.000Z">
+<meta property="article:modified_time" content="2020-10-04T13:03:40.418Z">
+<meta property="article:author" content="iondex">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://iondex.github.io/2020/10/04/android-mediaextractor/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Android 7.0 MediaExtractor 分析 | Iondex's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Iondex's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://iondex.github.io/2020/10/04/android-mediaextractor/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="iondex">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Iondex's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android 7.0 MediaExtractor 分析
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-10-04 20:51:28 / Modified: 21:03:40" itemprop="dateCreated datePublished" datetime="2020-10-04T20:51:28+08:00">2020-10-04</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>版本：Android Nougat 7.1.1_r6</p>
+<p>源码：<a target="_blank" rel="noopener" href="http://androidxref.com/7.1.1_r6/xref/frameworks/av/services/mediaextractor">AndroidXRef</a></p>
+<h2 id="启动分析"><a href="#启动分析" class="headerlink" title="启动分析"></a>启动分析</h2><p><a target="_blank" rel="noopener" href="http://androidxref.com/7.1.1_r6/xref/frameworks/av/services/mediaextractor/main_extractorservice.cpp">main_extractorservice.cpp</a></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc __unused, <span class="keyword">char</span>** argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 限制访问的物理内存数量为20%。</span></span><br><span class="line">    limitProcessMemory(</span><br><span class="line">        <span class="string">&quot;ro.media.maxmem&quot;</span>, <span class="comment">/* property that defines limit */</span></span><br><span class="line">        SIZE_MAX, <span class="comment">/* upper limit in bytes */</span></span><br><span class="line">        <span class="number">20</span> <span class="comment">/* upper limit as percentage of physical RAM */</span>);</span><br><span class="line"></span><br><span class="line">    signal(SIGPIPE, SIG_IGN);</span><br><span class="line">    <span class="comment">// 设置进程的MiniJail</span></span><br><span class="line">    MiniJail();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 初始化ICU4C</span></span><br><span class="line">    InitializeIcuOrDie();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 设置自身的进程名为 media.extractor</span></span><br><span class="line">    <span class="built_in">strcpy</span>(argv[<span class="number">0</span>], <span class="string">&quot;media.extractor&quot;</span>);</span><br><span class="line">    <span class="comment">// 初始化ProcessState，获取ServiceManager</span></span><br><span class="line">    <span class="function">sp&lt;ProcessState&gt; <span class="title">proc</span><span class="params">(ProcessState::self())</span></span>;</span><br><span class="line">    sp&lt;IServiceManager&gt; sm = defaultServiceManager();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 创建MediaExtractorService实例</span></span><br><span class="line">    <span class="comment">// 所以启动的Binder线程是MediaExtractorService</span></span><br><span class="line">    MediaExtractorService::instantiate();</span><br><span class="line">    <span class="comment">// 开启Binder线程</span></span><br><span class="line">    ProcessState::self()-&gt;startThreadPool();</span><br><span class="line">    IPCThreadState::self()-&gt;joinThreadPool();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="MediaExtractorService实现分析"><a href="#MediaExtractorService实现分析" class="headerlink" title="MediaExtractorService实现分析"></a>MediaExtractorService实现分析</h2><p>MediaExtractorService继承了BnMediaExtractor和一个特殊的类BinderService。其本质是一个辅助类，包括了一些辅助功能。实现如下：</p>
+<p><a target="_blank" rel="noopener" href="http://androidxref.com/7.1.1_r6/xref/frameworks/native/include/binder/BinderService.h">BinderService.h</a></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> SERVICE&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BinderService</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 向ServiceManager注册这个服务。getServiceName是需要接口实现的方法。</span></span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">status_t</span> <span class="title">publish</span><span class="params">(<span class="keyword">bool</span> allowIsolated = <span class="literal">false</span>)</span> </span>&#123;</span><br><span class="line">        <span class="function">sp&lt;IServiceManager&gt; <span class="title">sm</span><span class="params">(defaultServiceManager())</span></span>;</span><br><span class="line">        <span class="keyword">return</span> sm-&gt;addService(</span><br><span class="line">                String16(SERVICE::getServiceName()),</span><br><span class="line">                <span class="keyword">new</span> SERVICE(), allowIsolated);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 原本常见的instantiate方法成为包装方法</span></span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">instantiate</span><span class="params">()</span> </span>&#123; publish(); &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="http://androidxref.com/7.1.1_r6/xref/frameworks/av/services/mediaextractor/MediaExtractorService.h">MediaExtractorService.h</a></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MediaExtractorService</span> :</span> <span class="keyword">public</span> BinderService&lt;MediaExtractorService&gt;, <span class="keyword">public</span> BnMediaExtractorService</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">friend</span> <span class="class"><span class="keyword">class</span> <span class="title">BinderService</span>&lt;MediaExtractorService&gt;;</span>    <span class="comment">// for MediaExtractorService()</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 为BinderService实现的getServiceName方法</span></span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">char</span>*  <span class="title">getServiceName</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="string">&quot;media.extractor&quot;</span>; &#125;</span><br><span class="line">    <span class="comment">// makeExtractor包装方法</span></span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> sp&lt;IMediaExtractor&gt; <span class="title">makeExtractor</span><span class="params">(<span class="keyword">const</span> sp&lt;IDataSource&gt; &amp;source, <span class="keyword">const</span> <span class="keyword">char</span> *mime)</span></span>;</span><br><span class="line">    <span class="comment">// onTransact实现，直接调用BnMediaExtractorService</span></span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">status_t</span>    <span class="title">onTransact</span><span class="params">(<span class="keyword">uint32_t</span> code, <span class="keyword">const</span> Parcel&amp; data, Parcel* reply,</span></span></span><br><span class="line"><span class="function"><span class="params">                                <span class="keyword">uint32_t</span> flags)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    Mutex               mLock;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>在<code>IMediaExtractorService.h</code>中定义了两个接口，一个是抽象接口<code>IMediaExtractorService</code>，其中描述了<code>makeExtractor</code>这个行为；另一个则是用于实现Service端的<code>BnMediaExtractorService</code>。</p>
+<p><a target="_blank" rel="noopener" href="http://androidxref.com/7.1.1_r6/xref/frameworks/av/include/media/IMediaExtractorService.h">IMediaExtractorService.h</a></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">IMediaExtractorService</span>:</span> <span class="keyword">public</span> IInterface</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    DECLARE_META_INTERFACE(MediaExtractorService);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 参数为一个IDataSource和Mime-Type</span></span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> sp&lt;IMediaExtractor&gt; <span class="title">makeExtractor</span><span class="params">(<span class="keyword">const</span> sp&lt;IDataSource&gt; &amp;source, <span class="keyword">const</span> <span class="keyword">char</span> *mime)</span> </span>= <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BnMediaExtractorService</span>:</span> <span class="keyword">public</span> BnInterface&lt;IMediaExtractorService&gt;</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">status_t</span>    <span class="title">onTransact</span><span class="params">(<span class="keyword">uint32_t</span> code, <span class="keyword">const</span> Parcel&amp; data, Parcel* reply,</span></span></span><br><span class="line"><span class="function"><span class="params">                                <span class="keyword">uint32_t</span> flags = <span class="number">0</span>)</span></span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p><code>MediaExtractorService</code>是<code>BnMediaExtractorService</code>的子类，实现了<code>IMediaExtractorService</code>接口中定义的<code>makeExtractor</code>方法，且会在内部将发给自己的请求转发给<code>BnMediaExtractorService</code>。</p>
+<p><a target="_blank" rel="noopener" href="http://androidxref.com/7.1.1_r6/xref/frameworks/av/services/mediaextractor/MediaExtractorService.h">MediaExtractorService.h</a></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">sp&lt;IMediaExtractor&gt; <span class="title">MediaExtractorService::makeExtractor</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">        <span class="keyword">const</span> sp&lt;IDataSource&gt; &amp;remoteSource, <span class="keyword">const</span> <span class="keyword">char</span> *mime)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将Remote发来的IDataSource转换为可用的DataSource</span></span><br><span class="line">    sp&lt;DataSource&gt; localSource = DataSource::CreateFromIDataSource(remoteSource);</span><br><span class="line">    <span class="comment">// 调用MediaExtractor的CreateFromService方法创建IMediaExtractor</span></span><br><span class="line">    sp&lt;IMediaExtractor&gt; ret = MediaExtractor::CreateFromService(localSource, mime);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//（忽略了一些Check）</span></span><br><span class="line">    <span class="comment">// 如果创建成功，就将这个MediaExtractor注册到使用的Extractor中</span></span><br><span class="line">    <span class="comment">// MediaExtractorService的dump方法会调用dumpExtractors</span></span><br><span class="line">    <span class="comment">// 将最近使用的MediaExtractor信息dump到指定的fd</span></span><br><span class="line">    <span class="comment">// 推测是Debug用途</span></span><br><span class="line">    <span class="keyword">if</span> (ret != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        registerMediaExtractor(ret, localSource, mime);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">status_t</span> <span class="title">MediaExtractorService::onTransact</span><span class="params">(<span class="keyword">uint32_t</span> code, <span class="keyword">const</span> Parcel&amp; data, Parcel* reply,</span></span></span><br><span class="line"><span class="function"><span class="params">        <span class="keyword">uint32_t</span> flags)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 调用父类Binder服务端的BnMediaExtractorService处理</span></span><br><span class="line">    <span class="keyword">return</span> BnMediaExtractorService::onTransact(code, data, reply, flags);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>BnMediaExtractorService</code>的实现在<code>IMediaExtractorService.cpp</code>中：</p>
+<p><a target="_blank" rel="noopener" href="http://androidxref.com/7.1.1_r6/xref/frameworks/av/media/libmedia/IMediaExtractorService.cpp">IMediaExtractorService.cpp</a></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// （略去了一些Check过程）</span></span><br><span class="line"><span class="function"><span class="keyword">status_t</span> <span class="title">BnMediaExtractorService::onTransact</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">    <span class="keyword">uint32_t</span> code, <span class="keyword">const</span> Parcel&amp; data, Parcel* reply, <span class="keyword">uint32_t</span> flags)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">switch</span> (code) &#123;</span><br><span class="line">        <span class="comment">// 接收MAKE_EXTRACTOR指令</span></span><br><span class="line">        <span class="keyword">case</span> MAKE_EXTRACTOR: &#123;</span><br><span class="line">            CHECK_INTERFACE(IMediaExtractorService, data, reply);</span><br><span class="line">            <span class="comment">// 读取第一个参数：IDataSource</span></span><br><span class="line">            sp&lt;IBinder&gt; b;</span><br><span class="line">            <span class="keyword">status_t</span> ret = data.readStrongBinder(&amp;b);</span><br><span class="line">            <span class="comment">// 将IBinder对象Cast为IDataSource</span></span><br><span class="line">            sp&lt;IDataSource&gt; source = interface_cast&lt;IDataSource&gt;(b);</span><br><span class="line">            <span class="comment">// 读取第二个参数：Mime-Type</span></span><br><span class="line">            <span class="keyword">const</span> <span class="keyword">char</span> *mime = data.readCString();</span><br><span class="line">            <span class="comment">// 根据这两个参数，调用makeExtractor方法。</span></span><br><span class="line">            <span class="comment">// 最终调用的是在MediaExtractorService的makeExtractor方法</span></span><br><span class="line">            sp&lt;IMediaExtractor&gt; ex = makeExtractor(source, mime);</span><br><span class="line">            <span class="comment">// 将创建的IMediaExtractor通过reply参数返回</span></span><br><span class="line">            reply-&gt;writeStrongBinder(IInterface::asBinder(ex));</span><br><span class="line">            <span class="keyword">return</span> NO_ERROR;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            <span class="keyword">return</span> BBinder::onTransact(code, data, reply, flags);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="DataSource创建"><a href="#DataSource创建" class="headerlink" title="DataSource创建"></a>DataSource创建</h2><p>首先来看如何从<code>IDataSource</code>创建对应的<code>DataSource</code>。</p>
+<p><a target="_blank" rel="noopener" href="http://androidxref.com/7.1.1_r6/xref/frameworks/av/media/libstagefright/DataSource.cpp">DataSource.cpp</a></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">sp&lt;DataSource&gt; <span class="title">DataSource::CreateFromIDataSource</span><span class="params">(<span class="keyword">const</span> sp&lt;IDataSource&gt; &amp;source)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 第一步：创建一个CallbackDataSource包裹原本的IDataSource</span></span><br><span class="line">    <span class="comment">// 第二步：再创建一个外层的TinyCacheSource包裹这个CallbackDataSource</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> TinyCacheSource(<span class="keyword">new</span> CallbackDataSource(source));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>CallbackDataSource</code>实际上是对Remote<code>IDataSource</code>包裹的一个Wrapper。</p>
+<p><a target="_blank" rel="noopener" href="http://androidxref.com/7.1.1_r6/xref/frameworks/av/media/libstagefright/CallbackDataSource.cpp">CallbackDataSource.cpp</a></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 举例：readAt方法的wrapper</span></span><br><span class="line"><span class="function"><span class="keyword">ssize_t</span> <span class="title">CallbackDataSource::readAt</span><span class="params">(<span class="keyword">off64_t</span> offset, <span class="keyword">void</span>* data, <span class="keyword">size_t</span> size)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// mMemory成员来自IDataSource的getIMemory</span></span><br><span class="line">    <span class="comment">// 作为数据读取过程的Buffer</span></span><br><span class="line">    <span class="keyword">if</span> (mMemory == <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// IDataSource can only read up to mMemory-&gt;size() bytes at a time, but this</span></span><br><span class="line">    <span class="comment">// method should be able to read any number of bytes, so read in a loop.</span></span><br><span class="line">    <span class="comment">// IDataSource内部的缓冲区大小固定（即mMemory-&gt;size()）</span></span><br><span class="line">    <span class="comment">// 因此下面这段代码循环利用mMemory实现任意大小的读取</span></span><br><span class="line">    <span class="keyword">size_t</span> totalNumRead = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">size_t</span> numLeft = size;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">size_t</span> bufferSize = mMemory-&gt;size();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (numLeft &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">// 如果读取的部分比缓冲区大，则只读取bufferSize长度</span></span><br><span class="line">        <span class="keyword">size_t</span> numToRead = <span class="built_in">std</span>::min(numLeft, bufferSize);</span><br><span class="line">        <span class="keyword">ssize_t</span> numRead =</span><br><span class="line">            mIDataSource-&gt;readAt(offset + totalNumRead, numToRead);</span><br><span class="line">        <span class="comment">// A negative return value represents an error. Pass it on.</span></span><br><span class="line">        <span class="keyword">if</span> (numRead &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> numRead == ERROR_END_OF_STREAM &amp;&amp; totalNumRead &gt; <span class="number">0</span> ? totalNumRead : numRead;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// A zero return value signals EOS. Return the bytes read so far.</span></span><br><span class="line">        <span class="keyword">if</span> (numRead == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> totalNumRead;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 真实读取的长度比应该读取的长度更长，出错</span></span><br><span class="line">        <span class="keyword">if</span> ((<span class="keyword">size_t</span>)numRead &gt; numToRead) &#123;</span><br><span class="line">            <span class="keyword">return</span> ERROR_OUT_OF_RANGE;</span><br><span class="line">        &#125;</span><br><span class="line">        CHECK(numRead &gt;= <span class="number">0</span> &amp;&amp; (<span class="keyword">size_t</span>)numRead &lt;= bufferSize);</span><br><span class="line">        <span class="comment">// 从mMemory中将数据拷回data</span></span><br><span class="line">        <span class="built_in">memcpy</span>(((<span class="keyword">uint8_t</span>*)data) + totalNumRead, mMemory-&gt;pointer(), numRead);</span><br><span class="line">        numLeft -= numRead;</span><br><span class="line">        totalNumRead += numRead;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> totalNumRead;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>TinyCacheSource</code>实际上是对<code>CallbackSource</code>的进一步包装（可以应用于任意<code>DataSource</code>）。如果一次性读取的数据量小于某个常数<code>kCacheSize = 2048</code>，则读取固定的长度并在下次读取时直接从缓冲区里取。这样就避免了频繁操作<code>IDataSource</code>带来的Binder性能开销。定义在<a target="_blank" rel="noopener" href="http://androidxref.com/7.1.1_r6/xref/frameworks/av/media/libstagefright/include/CallbackDataSource.h">CallbackDataSource.h</a>中。</p>
+<h2 id="MediaExtractor创建"><a href="#MediaExtractor创建" class="headerlink" title="MediaExtractor创建"></a>MediaExtractor创建</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// （省略了一些细节、Log以及DRM相关代码）</span></span><br><span class="line"><span class="function">sp&lt;MediaExtractor&gt; <span class="title">MediaExtractor::CreateFromService</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">        <span class="keyword">const</span> sp&lt;DataSource&gt; &amp;source, <span class="keyword">const</span> <span class="keyword">char</span> *mime)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 注册一些Sniffer，这些Sniffer用于检测数据中包含的媒体类型</span></span><br><span class="line">    DataSource::RegisterDefaultSniffers();</span><br><span class="line"></span><br><span class="line">    sp&lt;AMessage&gt; meta;</span><br><span class="line">    String8 tmp;</span><br><span class="line">    <span class="keyword">if</span> (mime == <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="comment">// 如果Mime为空，尝试调用Sniffer测试媒体类型</span></span><br><span class="line">        <span class="keyword">float</span> confidence;</span><br><span class="line">        <span class="keyword">if</span> (!source-&gt;sniff(&amp;tmp, &amp;confidence, &amp;meta)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        mime = tmp.<span class="built_in">string</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">bool</span> isDrm = <span class="literal">false</span>;</span><br><span class="line">    <span class="comment">// 省略了DRM检测的过程。如果检测出DRM会将isDrm设为true</span></span><br><span class="line"></span><br><span class="line">    MediaExtractor *ret = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="comment">// 根据Mime匹配选择创建的MediaExtractor类型</span></span><br><span class="line">    <span class="keyword">if</span> (!strcasecmp(mime, MEDIA_MIMETYPE_CONTAINER_MPEG4)</span><br><span class="line">            || !strcasecmp(mime, <span class="string">&quot;audio/mp4&quot;</span>)) &#123;</span><br><span class="line">        ret = <span class="keyword">new</span> MPEG4Extractor(source);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// else if ...</span></span><br><span class="line">    <span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="MediaExtractor实现分析"><a href="#MediaExtractor实现分析" class="headerlink" title="MediaExtractor实现分析"></a>MediaExtractor实现分析</h2><p>首先分析MediaExtractor实现的基础接口，<code>IMediaExtractor</code>, <code>BpMediaExtractor</code>和<code>BnMediaExtractor</code>。这是一个Binder匿名服务，即并没有在Binder Driver注册。</p>
+<p><a target="_blank" rel="noopener" href="http://androidxref.com/7.1.1_r6/xref/frameworks/av/include/media/IMediaExtractor.h">IMediaExtractor.h</a></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">IMediaExtractor</span> :</span> <span class="keyword">public</span> IInterface &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    DECLARE_META_INTERFACE(MediaExtractor);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获得Track数量</span></span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">size_t</span> <span class="title">countTracks</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="comment">// 获得一个给定的Track</span></span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> sp&lt;IMediaSource&gt; <span class="title">getTrack</span><span class="params">(<span class="keyword">size_t</span> index)</span> </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="comment">// 根据索引获得一个Track的MetaData</span></span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> sp&lt;MetaData&gt; <span class="title">getTrackMetaData</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">            <span class="keyword">size_t</span> index, <span class="keyword">uint32_t</span> flags = <span class="number">0</span>)</span> </span>= <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获得这个媒体Container的Metadata</span></span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> sp&lt;MetaData&gt; <span class="title">getMetaData</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 媒体能否支持某些行为</span></span><br><span class="line">    <span class="keyword">enum</span> Flags &#123;</span><br><span class="line">        CAN_SEEK_BACKWARD  = <span class="number">1</span>,  <span class="comment">// the &quot;seek 10secs back button&quot;</span></span><br><span class="line">        CAN_SEEK_FORWARD   = <span class="number">2</span>,  <span class="comment">// the &quot;seek 10secs forward button&quot;</span></span><br><span class="line">        CAN_PAUSE          = <span class="number">4</span>,</span><br><span class="line">        CAN_SEEK           = <span class="number">8</span>,  <span class="comment">// the &quot;seek bar&quot;</span></span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="comment">// If subclasses do _not_ override this, the default is</span></span><br><span class="line">    <span class="comment">// CAN_SEEK_BACKWARD | CAN_SEEK_FORWARD | CAN_SEEK | CAN_PAUSE</span></span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">uint32_t</span> <span class="title">flags</span><span class="params">()</span> <span class="keyword">const</span> </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keyword">char</span> * <span class="title">name</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 省略了DRM相关方法</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p><code>BpMediaExtractor</code>的实现很简单，作为一个Wrapper，实现了<code>IMediaExtractor</code>的接口，在这些接口中构造Binder数据包并发送该数据包给Service端。</p>
+<p>实现举例：<a target="_blank" rel="noopener" href="http://androidxref.com/7.1.1_r6/xref/frameworks/av/media/libmedia/IMediaExtractor.cpp">IMediaExtractor.cpp</a></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">size_t</span> <span class="title">BpMediaExtractor::countTracks</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 准备数据，因为没有参数只需写入Token</span></span><br><span class="line">    Parcel data, reply;</span><br><span class="line">    data.writeInterfaceToken(BpMediaExtractor::getInterfaceDescriptor());</span><br><span class="line">    <span class="comment">// 发送Binder调用，返回结果</span></span><br><span class="line">    <span class="keyword">status_t</span> ret = remote()-&gt;transact(COUNTTRACKS, data, &amp;reply);</span><br><span class="line">    <span class="keyword">size_t</span> numTracks = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (ret == NO_ERROR) &#123;</span><br><span class="line">        <span class="comment">// 如果正常返回，从reply中获取返回结果</span></span><br><span class="line">        numTracks = reply.readUint32();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> numTracks;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/10/04/android-binder/" rel="prev" title="Binder分析：基于Android-7.1.1_r6">
+      <i class="fa fa-chevron-left"></i> Binder分析：基于Android-7.1.1_r6
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E5%88%86%E6%9E%90"><span class="nav-number">1.</span> <span class="nav-text">启动分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MediaExtractorService%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90"><span class="nav-number">2.</span> <span class="nav-text">MediaExtractorService实现分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DataSource%E5%88%9B%E5%BB%BA"><span class="nav-number">3.</span> <span class="nav-text">DataSource创建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MediaExtractor%E5%88%9B%E5%BB%BA"><span class="nav-number">4.</span> <span class="nav-text">MediaExtractor创建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MediaExtractor%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90"><span class="nav-number">5.</span> <span class="nav-text">MediaExtractor实现分析</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">iondex</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">iondex</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

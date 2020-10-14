@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.0.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"iondex.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="IntroductionAPT的特征：  APT攻击是长期行为（与传统攻击最大的区别） 经常利用0day漏洞  传统解决方案：  基于Malware Signature的方式无法发现利用0day漏洞的攻击【Before we knew it: an empirical study of zero-day attacks in the real world】 基于异常行为（Anomaly）检测的方法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="UNICORN阅读笔记">
+<meta property="og:url" content="http://iondex.github.io/2020/08/18/unicorn-reading/index.html">
+<meta property="og:site_name" content="Iondex&#39;s Blog">
+<meta property="og:description" content="IntroductionAPT的特征：  APT攻击是长期行为（与传统攻击最大的区别） 经常利用0day漏洞  传统解决方案：  基于Malware Signature的方式无法发现利用0day漏洞的攻击【Before we knew it: an empirical study of zero-day attacks in the real world】 基于异常行为（Anomaly）检测的方法">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-08-18T08:36:50.000Z">
+<meta property="article:modified_time" content="2020-10-04T07:33:23.797Z">
+<meta property="article:author" content="iondex">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://iondex.github.io/2020/08/18/unicorn-reading/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>UNICORN阅读笔记 | Iondex's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Iondex's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://iondex.github.io/2020/08/18/unicorn-reading/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="iondex">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Iondex's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          UNICORN阅读笔记
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-08-18 16:36:50" itemprop="dateCreated datePublished" datetime="2020-08-18T16:36:50+08:00">2020-08-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-10-04 15:33:23" itemprop="dateModified" datetime="2020-10-04T15:33:23+08:00">2020-10-04</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>APT的特征：</p>
+<ul>
+<li>APT攻击是长期行为（与传统攻击最大的区别）</li>
+<li>经常利用0day漏洞</li>
+</ul>
+<p>传统解决方案：</p>
+<ul>
+<li>基于Malware Signature的方式无法发现利用0day漏洞的攻击【Before we knew it: an empirical study of zero-day attacks in the real world】</li>
+<li>基于异常行为（Anomaly）检测的方法<ul>
+<li>无法发现长期的行为模式</li>
+<li>只是分析事件和syscall的小片段，更容易被攻击者规避</li>
+</ul>
+</li>
+<li>长期行为建模【Long-span program behavior modeling and attack detection】，只局限于分析事件共同发生这种现象，避免过度使用计算和内存资源</li>
+</ul>
+<p>新的基于Provenance的APT检测：</p>
+<ul>
+<li>把整个系统的运行信息构造为一个有向无环图（DAG），描述系统的信息流动<ul>
+<li>构造：<ul>
+<li>subject，一般为进程；object，一般为各种OS对象（除了进程之外）</li>
+<li>用事件event作为边来连接subject和object</li>
+</ul>
+</li>
+<li>优势：<ul>
+<li>即使两个相关的event间隔时间很长，图也能保留这种相关信息，提供APT追踪的更丰富的上下文</li>
+<li>这种上下文信息可以更好地区分benign和malicious事件</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>现有工作的缺陷（静态代表FRAP，动态代表StreamSpot）：</p>
+<ol>
+<li>静态模型无法捕捉和获取系统的长期行为</li>
+<li>由于APT攻击是长期行为，可能会逐渐污染动态模型（使模型将malicious的行为识别为benign行为）</li>
+<li>需要将整个Provenance Graph放在主内存当中，因此不适合长期攻击的检测</li>
+</ol>
+<h2 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h2><p>基于Syscall信息追踪的APT分析：</p>
+<ul>
+<li>早期研究只是单纯地对syscall日志进行分析，并尝试发现异常点（Outlier Point），或者通过一段syscall调用日志来分析和判断异常情况。这些都很难有效果，因为这些分析忽略了这一点或者一段syscall的历史信息，会导致很多FP。</li>
+<li>后来有研究尝试从syscall信息重建Provenance Graph，但这种方法很难保证图的正确性：<ul>
+<li>由于syscall记录本身可能是不正确、不完善和不可靠的</li>
+<li>很多Hook系统调用的系统有因为并行执行导致的问题</li>
+<li>很多内核级的记录系统有TOATTOU的bug，这个bug会导致记录的系统调用参数和实际传入内核的参数不同</li>
+<li>由于很多内核线程并不使用系统调用，根据系统调用日志建图可能出现很多图不连通的问题</li>
+</ul>
+</li>
+</ul>
+<p>当前研究（FRAP，StreamSpot，HOLMES）的局限：</p>
+<ol>
+<li>预定义的边匹配规则过于敏感，且无法检测APT中常见的0day漏洞（针对HOLMES）</li>
+<li>图分析只分析了局部特征，或是节点周围的小邻域，或者只是节点/边的属性，或者只是一部分子图</li>
+<li>对系统行为的建模无法适应对APT的检测，静态模型无法描述长时间运行系统的动态特征（针对FRAP），而动态模型有被APT攻击污染的风险（针对StreamSpot）</li>
+<li>Provenance Graph存储在内存当中，随着时间跨度增加、图的规模增大无法扩展</li>
+</ol>
+<h2 id="Design"><a href="#Design" class="headerlink" title="Design"></a>Design</h2><h3 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h3><ol>
+<li>输入一个带标签的流式图。这个图由CamFlow系统生成，只有一个图，包含整个系统的Provenance信息。</li>
+<li>在线维护一个图的直方图。通过在线的迭代算法维护一个直方图，直方图中每个元素代表着某一类子图结构的数量，这个结构通过节点标签考虑了图的异质性，通过边权重考虑了时间序。同时，引入指数遗忘机制，缓慢减少直方图元素的分量，这样在保留信息流的同时可以适应系统状态变化。</li>
+<li>周期性计算图的Sketch。采用HistoSketch算法，把变长且不断更新的直方图周期性地转换成长度相同的Sketch，这种Sketch可以用来计算相似度，并且本身也提供了指数遗忘和对Concept-Drift的支持。</li>
+<li>构造正常运行时系统行为的模型。通过定期生成Sketch形成描述正常行为的Cluster，同时并不修改这些模型保证攻击行为不会污染模型。</li>
+</ol>
+<h3 id="Histogram"><a href="#Histogram" class="headerlink" title="Histogram"></a>Histogram</h3><p>直方图生成核心是1维WL算法的变种：</p>
+<ul>
+<li>概括来说就是通过迭代和重标签，逐步概括每一个节点周围的节点的结构信息（准确来说，是以每个节点为根的生成子树），生成一个直方图。最初用来比较小规模图的结构相似性。</li>
+<li>针对原算法的改进：<ul>
+<li>引入边标签，并将边标签也考虑到新的Label的生成过程中（原算法只有节点有标签）。</li>
+<li>引入边的时间戳，在原算法的Label排序过程中利用时间戳进行排序。</li>
+</ul>
+</li>
+</ul>
+<p>适应流式系统的优化：</p>
+<ul>
+<li>在流式设计中，只对新的节点和新节点邻域内的节点运行一遍算法，这样就显著减少了计算量。</li>
+<li><strong>偏序性</strong>：SOTA的Provenance记录系统应该保持偏序性，也就是说对于每个节点，其入边都会比出边早一步到达。在CamFlow这种用节点的Version来区分节点的系统，更新操作只需要在边对应的目标节点中进行。</li>
+</ul>
+<p>遗忘机制：</p>
+<p>UNICORN在直方图生成上就直接引入了遗忘机制，在直方图构建时就按照时间将历史数据乘以与时间相关的权重。</p>
+<h3 id="Sketch"><a href="#Sketch" class="headerlink" title="Sketch"></a>Sketch</h3><p>从Histogram生成Sketch这一步比较简单，根据数据的Streaming（在线更新）和Histogram分量非固定的特点，采用<strong>HistoSketch</strong>方法将一个Histogram转换为定长的Sketch。</p>
+<h3 id="模型构建和异常检测"><a href="#模型构建和异常检测" class="headerlink" title="模型构建和异常检测"></a>模型构建和异常检测</h3><p>Sketch生成后，采用K-medoids算法进行分组，分组情况用Silhouette参数进行调优，对每一个Sketch赋予最佳分组号。</p>
+<p>（K-medoids算法是常见的K-means算法的变种，将每个Cluster的中心作为分组基准；Silhouette是基于相似性提出的分组评价依据，衡量每个分组内元素的平均相似度）</p>
+<p>通过定期生成Sketch并进行归类，可以形成一个Instance上系统运行的状态转移序列，这个状态转移序列就成为系统行为的建模。在部署时进行同样的步骤，对于每个Sketch的归类，如果和当前/下一状态的分类不同，则判定为异常。</p>
+<h2 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a>Implementation</h2><p>涉及到Provenance信息采集的部分基于CamFlow：</p>
+<ul>
+<li>基于Linux Security Models（LSM）框架来确保高质量和可靠的信息流追踪和记录</li>
+<li>LSM解决了常见Syscall记录系统的竞争条件问题，通过将记录点直接设置在内核中而不是系统调用界面</li>
+</ul>
+<p>涉及到的图处理基于GraphChi：</p>
+<ul>
+<li>GraphChi是基于磁盘而非内存的图处理系统，可以很快地在规模很大的图上进行运算</li>
+<li>GraphChi在内部用平行滑窗（PSW）算法把图分成边数类似的Shard，在每一个Shard上进行并行计算以加快速度</li>
+<li>GraphChi的IO模型和批量操作使得图可以存储在磁盘当中，且在计算时保持相当的性能</li>
+</ul>
+<h2 id="Evaluation"><a href="#Evaluation" class="headerlink" title="Evaluation"></a>Evaluation</h2><p>UNICORN评估角度：</p>
+<ol>
+<li>准确性</li>
+<li>哪些设计上的考虑比较重要</li>
+<li>指数遗忘的策略是否有效</li>
+<li>系统长期运行建模的有效性对比</li>
+<li>速度，是否满足实时性要求</li>
+<li>内存、CPU使用</li>
+</ol>
+<blockquote>
+<p>Testing guidelines: Benchmarking crimes: an emerging threat in systems security</p>
+</blockquote>
+<h3 id="和StreamSpot比较"><a href="#和StreamSpot比较" class="headerlink" title="和StreamSpot比较"></a>和StreamSpot比较</h3><p>StreamSpot数据集：</p>
+<ul>
+<li>6个情景，其中5个对应Benign情形，有1个情景中发生了攻击事件，主要对应浏览器浏览行为</li>
+<li>通过自动化，每个情景重复100遍，对应100个Graph，用Linux下的SystemTap系统记录所有Syscall</li>
+</ul>
+<p>与StreamSpot的比较：</p>
+<ul>
+<li>主要参数是图算法中的迭代参数R。在UNICORN的实现中，R增大（从1到3）对应着FP案例减少，也对应着算法提取更大范围邻域的信息</li>
+<li>注：文中并未提到具体训练/测试集选取等细节，StreamSpot文章中有相应的分析</li>
+</ul>
+<h3 id="DARPA-TC-数据集测试"><a href="#DARPA-TC-数据集测试" class="headerlink" title="DARPA TC 数据集测试"></a>DARPA TC 数据集测试</h3><ul>
+<li>总共3次实验，分别有Benign情形和APT攻击情形</li>
+<li>训练/测试集分割：每次实验数据中90%划分为训练数据，10%为测试数据</li>
+<li>结果：正确率极高，在三次实验中正确率达到98%以上。但文中并未说明这个正确率计算的<strong>载体</strong>（即这个正确率是节点正确率还是攻击检测正确率）。</li>
+</ul>
+<h3 id="参数选取问题"><a href="#参数选取问题" class="headerlink" title="参数选取问题"></a>参数选取问题</h3><p>UNICORN有如下参数：</p>
+<ul>
+<li>跳数/邻居半径。过小则无法提取足够信息，过大则会包括噪音。测试中3为最好。</li>
+<li>Sketch大小。过大虽然可以包含更多信息，但也会导致维度爆炸。2000为最佳。</li>
+<li>Sketch生成周期（以边数为单位）。过大则无法准确记录状态变化。3000为最佳。</li>
+</ul>
+<h2 id="Discussion"><a href="#Discussion" class="headerlink" title="Discussion"></a>Discussion</h2><h3 id="Anomaly"><a href="#Anomaly" class="headerlink" title="Anomaly"></a>Anomaly</h3><p>问题（基于异常行为检测的方法存在的通病）：</p>
+<ul>
+<li>需要一段训练的时间，假设在这段时间内系统中只会有Benign行为，并且能够全面捕捉到。</li>
+<li>在训练期内发生的行为概括了绝大部分Benign行为。因此如果发生了新的Benign行为，就会产生FP。</li>
+<li>同样，由于需要对状态进行建模，当系统状态被人为大幅改变时就会出现问题（比如备份还原）。</li>
+</ul>
+<p>UNICORN的改进点：</p>
+<ul>
+<li>UNICORN的算法更高效，能够稳定、高效、连续地对大规模系统进行建模。</li>
+<li>UNICORN的图算法捕捉了范围更大的子图结构，因此能够总结更多的局部图信息，也就更难进行欺骗性攻击（mimicry attack）。</li>
+<li>UNICORN的CWS算法引入了随机性，并不保证能通过模仿正常节点的特征来进行欺骗性攻击。</li>
+</ul>
+<h3 id="False-Alarm"><a href="#False-Alarm" class="headerlink" title="False Alarm"></a>False Alarm</h3><p>问题：</p>
+<ul>
+<li>UNICORN本质上是静态模型，来避免攻击行为污染模型。（实际上UNICORN定时从Provenance Graph生成Sketch作为当前系统运行状态的Snapshot；而模型一旦建立就不再改变）</li>
+<li>由于静态模型的局限性，当正常的系统行为模式改变时，就会产生很多FP。</li>
+</ul>
+<p>UNICORN的改进点：</p>
+<ul>
+<li>通过HistoSketch引入Concept Drift，用于捕捉系统在正常运行的过程中产生的特征变化，并且避免产生过多的FP。</li>
+</ul>
+<h3 id="图分析"><a href="#图分析" class="headerlink" title="图分析"></a>图分析</h3><p>问题：</p>
+<ul>
+<li>图算法实际上有很多参数（最重要的参数可能是邻域半径R），如何确定参数是一个重要的问题。</li>
+</ul>
+<p>UNICORN的Argument：</p>
+<ul>
+<li>使用OpenTuner进行参数自动优化，自动选择最优参数。</li>
+<li>对所有的测试都使用了相同的参数，具有稳定性。</li>
+</ul>
+<h3 id="系统行为同质性"><a href="#系统行为同质性" class="headerlink" title="系统行为同质性"></a>系统行为同质性</h3><p>讨论：</p>
+<ul>
+<li>StreamSpot数据集是对近乎同质的行为进行重复建模（主要是网页浏览等行为）。</li>
+<li>UNICORN在StreamSpot上效果更好，说明这种方法在行为预定义的Host上效果更好。</li>
+<li>而在Workstation这种环境下，APT攻击检测就更加困难。</li>
+</ul>
+<h3 id="数据集和交叉验证"><a href="#数据集和交叉验证" class="headerlink" title="数据集和交叉验证"></a>数据集和交叉验证</h3><p>讨论：</p>
+<ul>
+<li>现有数据比较少，很多数据是过期数据，或者无法直接构成Provenance Graph，需要翻译。</li>
+<li>现有IDS的研究很多未开源，且采用自己的数据集，这些数据集的产生也未详述。</li>
+<li>这就导致系统之间的比较十分困难。</li>
+</ul>
+<h2 id="Related-Work"><a href="#Related-Work" class="headerlink" title="Related Work"></a>Related Work</h2><h3 id="Intrusion-Detection"><a href="#Intrusion-Detection" class="headerlink" title="Intrusion Detection"></a>Intrusion Detection</h3><ul>
+<li>定长的Syscall序列来定位攻击，推广到可变长度的特征序列。但准确性较低，无法应付复杂情形。（37 -&gt; 29，127）</li>
+<li>为Syscall添加状态来提供上下文信息，用有限状态机进行行为建模。（109，36，62，81）但这种方法复杂度高于多项式复杂度，可行性较差。</li>
+<li>总结性文章：113，78（扩展26，68，91）</li>
+</ul>
+<h3 id="Provenance"><a href="#Provenance" class="headerlink" title="Provenance"></a>Provenance</h3><p>初步工作：</p>
+<ul>
+<li>BackTracker：通过分析Provenance Graph找到攻击入口点。</li>
+<li>PriorTracker：通过为节点赋予优先级简化分析过程，并引入前向分析找出攻击路径。</li>
+<li>HERCULE：用Community Detection算法找出包含攻击路径的Community。</li>
+<li>Winnower：在Povenance Graph上进行语义推断，以减少Provenance数据导致的存储和网络需求。</li>
+<li>NoDoze：在Provenance Graph上实现攻击分流（attack triage），鉴别可疑的路径。</li>
+<li>CamQuery：基于CamFlow，提出了能够实时分析Provenance Graph的框架，也说明Provenance Graph在APT分析方面很有价值。</li>
+</ul>
+<p>进一步工作：</p>
+<ul>
+<li>SLEUTH和HOLMES，注重于利用provenance数据进行攻击溯源和重建。背景框架是【Identifying the provenance of correlated anomalies】，都需要先验知识。</li>
+<li>Poirot同样也是依赖先验信息，通过匹配攻击入口点来追踪APT。一般是通过专业的报告来找到这些入口点。</li>
+</ul>
+<h2 id="参考文献分类"><a href="#参考文献分类" class="headerlink" title="参考文献分类"></a>参考文献分类</h2><blockquote>
+<p>异常行为检测：</p>
+<p>114: Automated response using system-call delay<br>130: A sharper sense of self: Probabilistic reasoning of program behaviors for anomaly detection with context sensitivity<br>36: Anomaly detection using call stack information<br>81: Detecting intrusions through system call sequence and argument analysis<br>92: Exploiting execution context for the detection of anomalous system calls<br>109: A fast automatonbased method for detecting anomalous program behaviors</p>
+<p>APT+图分析：</p>
+<p>15: Mining data provenance to detect advanced persistent threats<br>19: Aggregating unsupervised provenance anomaly detectors<br>83: Fast memory-efficient anomaly detection in streaming heterogeneous graphs<br>87: Holmes: Real-time apt detection through correlation of suspicious information flows<br>55: Nodoze: Combatting threat alert fatigue with automated provenance triage<br>53: Frappuccino: fault-detection through runtime analysis of provenance</p>
+<p>Syscall相关的APT分析：</p>
+<p>37: A sense of self for unix processes<br>134: A markov chain model of temporal behavior for anomaly detection<br>61: Consistency analysis of authorization hook placement in the linux security modules framework<br>123: A markov chain model of temporal behavior for anomaly detection<br>43: Traps and pitfalls: Practical problems in system call interposition based security tools</p>
+<p>存在的问题讨论：</p>
+<p>125: Exploiting concurrency vulnerabilities in system call wrappers<br>98: A practical mimicry attack against powerful system-call monitors</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/08/16/android-related-papers/" rel="prev" title="Android Fuzzing/程序分析 相关文献">
+      <i class="fa fa-chevron-left"></i> Android Fuzzing/程序分析 相关文献
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/08/20/clang-standalone-tool/" rel="next" title="编写Clang独立命令行工具">
+      编写Clang独立命令行工具 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">1.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Background"><span class="nav-number">2.</span> <span class="nav-text">Background</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Design"><span class="nav-number">3.</span> <span class="nav-text">Design</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Overview"><span class="nav-number">3.1.</span> <span class="nav-text">Overview</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Histogram"><span class="nav-number">3.2.</span> <span class="nav-text">Histogram</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Sketch"><span class="nav-number">3.3.</span> <span class="nav-text">Sketch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E6%9E%84%E5%BB%BA%E5%92%8C%E5%BC%82%E5%B8%B8%E6%A3%80%E6%B5%8B"><span class="nav-number">3.4.</span> <span class="nav-text">模型构建和异常检测</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Implementation"><span class="nav-number">4.</span> <span class="nav-text">Implementation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Evaluation"><span class="nav-number">5.</span> <span class="nav-text">Evaluation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%92%8CStreamSpot%E6%AF%94%E8%BE%83"><span class="nav-number">5.1.</span> <span class="nav-text">和StreamSpot比较</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DARPA-TC-%E6%95%B0%E6%8D%AE%E9%9B%86%E6%B5%8B%E8%AF%95"><span class="nav-number">5.2.</span> <span class="nav-text">DARPA TC 数据集测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E6%95%B0%E9%80%89%E5%8F%96%E9%97%AE%E9%A2%98"><span class="nav-number">5.3.</span> <span class="nav-text">参数选取问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Discussion"><span class="nav-number">6.</span> <span class="nav-text">Discussion</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Anomaly"><span class="nav-number">6.1.</span> <span class="nav-text">Anomaly</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#False-Alarm"><span class="nav-number">6.2.</span> <span class="nav-text">False Alarm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%BE%E5%88%86%E6%9E%90"><span class="nav-number">6.3.</span> <span class="nav-text">图分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E8%A1%8C%E4%B8%BA%E5%90%8C%E8%B4%A8%E6%80%A7"><span class="nav-number">6.4.</span> <span class="nav-text">系统行为同质性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86%E5%92%8C%E4%BA%A4%E5%8F%89%E9%AA%8C%E8%AF%81"><span class="nav-number">6.5.</span> <span class="nav-text">数据集和交叉验证</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Related-Work"><span class="nav-number">7.</span> <span class="nav-text">Related Work</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Intrusion-Detection"><span class="nav-number">7.1.</span> <span class="nav-text">Intrusion Detection</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Provenance"><span class="nav-number">7.2.</span> <span class="nav-text">Provenance</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE%E5%88%86%E7%B1%BB"><span class="nav-number">8.</span> <span class="nav-text">参考文献分类</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">iondex</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">iondex</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
