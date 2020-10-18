@@ -145,6 +145,163 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://iondex.github.io/2020/10/15/ase-2019-papers/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="iondex">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Iondex's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/10/15/ase-2019-papers/" class="post-title-link" itemprop="url">ASE'19 文章概览</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-10-15 16:27:06 / Modified: 20:17:39" itemprop="dateCreated datePublished" datetime="2020-10-15T16:27:06+08:00">2020-10-15</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="Test-Transfer-Across-Mobile-Apps-Through-Semantic-Mapping"><a href="#Test-Transfer-Across-Mobile-Apps-Through-Semantic-Mapping" class="headerlink" title="Test Transfer Across Mobile Apps Through Semantic Mapping"></a>Test Transfer Across Mobile Apps Through Semantic Mapping</h2><p>目前的自动化GUI测试工作有几个缺陷：</p>
+<ul>
+<li>缺少context-aware的文本输入（比如正确的URL，正确的用户名/密码）</li>
+<li>生成的测试样例并不具有代表性/不是正常使用会产生的样例</li>
+<li>对failure的判别仅限于crash/exception（而不是真正地去感知错误）</li>
+</ul>
+<p>CraftDroid的思路是将现有的test-suit（及测试失败对应的判断标准）迁移到同类/相似的应用。</p>
+<p>Insight：</p>
+<ul>
+<li>同类型/类似的app有相似的功能</li>
+<li>相同功能对应的GUI组件在标签/命名等层面具有一定的相似性</li>
+</ul>
+<p>架构：<br>![](data:image/jpeg;base64,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</p>
+<ul>
+<li>Test Augmentation：在test case的每一步$(w_i, a_i)$，Augment步骤会通过<code>adb</code>将屏幕上的内容截取为XML文件，提取其中的语义信息，并将这些信息保存为test-case对应的额外信息。</li>
+<li>Model Extraction：对target app进行静态分析，生成UI转移图（UITG）<ul>
+<li>首先分析出app包含的activity、fragment及其中包含的widget</li>
+<li>从launch activity开始，分析这些activity/fragment怎样通过widget进行转移</li>
+</ul>
+</li>
+<li>Test Generation：对于原始test case的每一步，从target app寻找具有相似语义的candidate widget。如果找到了，就根据这个组件找一系列能够导向这个组件的动作（action），形成新的test case<ul>
+<li>相似程度判断（用于找candidates）：文本相似性、到达这个widget所需的操作深度（depth）</li>
+</ul>
+</li>
+</ul>
+<h2 id="Test-Migration-Between-Mobile-Apps-with-Similar-Functionality"><a href="#Test-Migration-Between-Mobile-Apps-with-Similar-Functionality" class="headerlink" title="Test Migration Between Mobile Apps with Similar Functionality"></a>Test Migration Between Mobile Apps with Similar Functionality</h2>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://iondex.github.io/2020/10/14/osdi-papers/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="iondex">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Iondex's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/10/14/osdi-papers/" class="post-title-link" itemprop="url">OSDI 文献概览</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-10-14 20:02:07" itemprop="dateCreated datePublished" datetime="2020-10-14T20:02:07+08:00">2020-10-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-10-15 12:53:38" itemprop="dateModified" datetime="2020-10-15T12:53:38+08:00">2020-10-15</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="OSDI’18"><a href="#OSDI’18" class="headerlink" title="OSDI’18"></a>OSDI’18</h2><h3 id="REPT-Reverse-Debugging-of-Failures-in-Deployed-Software"><a href="#REPT-Reverse-Debugging-of-Failures-in-Deployed-Software" class="headerlink" title="REPT: Reverse Debugging of Failures in Deployed Software"></a>REPT: Reverse Debugging of Failures in Deployed Software</h3><p>微软Cui Weidong团队作品。</p>
+<p>Binary级别的reverse debugging文章，思路是结合online的轻量级tracing（实现中是Intel PT）进行控制和信息记录，及离线的执行信息还原。</p>
+<h3 id="Finding-Crash-Consistency-Bugs-with-Bounded-Black-Box-Crash-Testing"><a href="#Finding-Crash-Consistency-Bugs-with-Bounded-Black-Box-Crash-Testing" class="headerlink" title="Finding Crash-Consistency Bugs with Bounded Black-Box Crash Testing"></a>Finding Crash-Consistency Bugs with Bounded Black-Box Crash Testing</h3><p>分析文件系统的Crash，通过文件系统的黑盒fuzzing。基本思想是生成一串workload交由文件系统操作。</p>
+<p>难点在于workload空间是无限的，解决方法是限制这个空间（比如说可以进行的操作、操作数量等）。</p>
+<p>提到了一个insight，认为文件系统的crash绝大多数都可以在一个全新的文件系统上执行几步workload就可以触发。</p>
+<p>文章发现了之前5年发现的24个Linux文件系统bug，且发现了10个新的bug。</p>
+<h3 id="Graviton-Trusted-Execution-Environments-on-GPUs"><a href="#Graviton-Trusted-Execution-Environments-on-GPUs" class="headerlink" title="Graviton: Trusted Execution Environments on GPUs"></a>Graviton: Trusted Execution Environments on GPUs</h3><p>在GPU上实现Trusted Execution（TE）的文章。卖点在于对现有系统的破坏比较小（只需要修改诸如GPU命令处理器等边缘设备）。</p>
+<p>缺点在于overhead比较大（17%-33%），且overhead集中于发送及接收数据带来的加/解密运算。</p>
+<h3 id="ZebRAM-Comprehensive-and-Compatible-Software-Protection-Against-Rowhammer-Attacks"><a href="#ZebRAM-Comprehensive-and-Compatible-Software-Protection-Against-Rowhammer-Attacks" class="headerlink" title="ZebRAM: Comprehensive and Compatible Software Protection Against Rowhammer Attacks"></a>ZebRAM: Comprehensive and Compatible Software Protection Against Rowhammer Attacks</h3><p>Rowhammer attack：由于现代内存（DRAM）中数据的存储单元（cell）密度极大，所以当非常频繁地读取一个单元的数据时有可能导致该单元的电压泄露，影响相邻的行（row）上的数据（比如导致位反转）。</p>
+<p>Rowhammer attack会影响当前内存cell周围的<strong>行</strong>。因此ZebRAM使用纯软件的方式将内存行隔开以防止Rowhammer attack。</p>
+<h2 id="OSDI’16"><a href="#OSDI’16" class="headerlink" title="OSDI’16"></a>OSDI’16</h2><h3 id="Push-Button-Verification-of-File-Systems-via-Crash-Refinement"><a href="#Push-Button-Verification-of-File-Systems-via-Crash-Refinement" class="headerlink" title="Push-Button Verification of File Systems via Crash Refinement"></a>Push-Button Verification of File Systems via Crash Refinement</h3>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://iondex.github.io/2020/08/20/clang-standalone-tool/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -196,266 +353,6 @@
 </blockquote>
 <p>LibTooling是LLVM提供的，用于编写基于Clang的独立命令行工具（Standalone Commandline Tool）的工具库。</p>
 <p>和LibClang（提供一个基于Index和Cursor的C API）相比，LibTooling基于C++且功能更为强大，但由于功能更接近于Clang的核心，API更加复杂且不稳定，很可能随着Clang版本的变化导致API变化。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://iondex.github.io/2020/08/18/unicorn-reading/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="iondex">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Iondex's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/08/18/unicorn-reading/" class="post-title-link" itemprop="url">UNICORN阅读笔记</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-08-18 16:36:50" itemprop="dateCreated datePublished" datetime="2020-08-18T16:36:50+08:00">2020-08-18</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-10-14 19:26:37" itemprop="dateModified" datetime="2020-10-14T19:26:37+08:00">2020-10-14</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>APT的特征：</p>
-<ul>
-<li>APT攻击是长期行为（与传统攻击最大的区别）</li>
-<li>经常利用0day漏洞</li>
-</ul>
-<p>传统解决方案：</p>
-<ul>
-<li>基于Malware Signature的方式无法发现利用0day漏洞的攻击【Before we knew it: an empirical study of zero-day attacks in the real world】</li>
-<li>基于异常行为（Anomaly）检测的方法<ul>
-<li>无法发现长期的行为模式</li>
-<li>只是分析事件和syscall的小片段，更容易被攻击者规避</li>
-</ul>
-</li>
-<li>长期行为建模【Long-span program behavior modeling and attack detection】，只局限于分析事件共同发生这种现象，避免过度使用计算和内存资源</li>
-</ul>
-<p>新的基于Provenance的APT检测：</p>
-<ul>
-<li>把整个系统的运行信息构造为一个有向无环图（DAG），描述系统的信息流动<ul>
-<li>构造：<ul>
-<li>subject，一般为进程；object，一般为各种OS对象（除了进程之外）</li>
-<li>用事件event作为边来连接subject和object</li>
-</ul>
-</li>
-<li>优势：<ul>
-<li>即使两个相关的event间隔时间很长，图也能保留这种相关信息，提供APT追踪的更丰富的上下文</li>
-<li>这种上下文信息可以更好地区分benign和malicious事件</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<p>现有工作的缺陷（静态代表FRAP，动态代表StreamSpot）：</p>
-<ol>
-<li>静态模型无法捕捉和获取系统的长期行为</li>
-<li>由于APT攻击是长期行为，可能会逐渐污染动态模型（使模型将malicious的行为识别为benign行为）</li>
-<li>需要将整个Provenance Graph放在主内存当中，因此不适合长期攻击的检测</li>
-</ol>
-<h2 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h2><p>基于Syscall信息追踪的APT分析：</p>
-<ul>
-<li>早期研究只是单纯地对syscall日志进行分析，并尝试发现异常点（Outlier Point），或者通过一段syscall调用日志来分析和判断异常情况。这些都很难有效果，因为这些分析忽略了这一点或者一段syscall的历史信息，会导致很多FP。</li>
-<li>后来有研究尝试从syscall信息重建Provenance Graph，但这种方法很难保证图的正确性：<ul>
-<li>由于syscall记录本身可能是不正确、不完善和不可靠的</li>
-<li>很多Hook系统调用的系统有因为并行执行导致的问题</li>
-<li>很多内核级的记录系统有TOATTOU的bug，这个bug会导致记录的系统调用参数和实际传入内核的参数不同</li>
-<li>由于很多内核线程并不使用系统调用，根据系统调用日志建图可能出现很多图不连通的问题</li>
-</ul>
-</li>
-</ul>
-<p>当前研究（FRAP，StreamSpot，HOLMES）的局限：</p>
-<ol>
-<li>预定义的边匹配规则过于敏感，且无法检测APT中常见的0day漏洞（针对HOLMES）</li>
-<li>图分析只分析了局部特征，或是节点周围的小邻域，或者只是节点/边的属性，或者只是一部分子图</li>
-<li>对系统行为的建模无法适应对APT的检测，静态模型无法描述长时间运行系统的动态特征（针对FRAP），而动态模型有被APT攻击污染的风险（针对StreamSpot）</li>
-<li>Provenance Graph存储在内存当中，随着时间跨度增加、图的规模增大无法扩展</li>
-</ol>
-<h2 id="Design"><a href="#Design" class="headerlink" title="Design"></a>Design</h2><h3 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h3><ol>
-<li>输入一个带标签的流式图。这个图由CamFlow系统生成，只有一个图，包含整个系统的Provenance信息。</li>
-<li>在线维护一个图的直方图。通过在线的迭代算法维护一个直方图，直方图中每个元素代表着某一类子图结构的数量，这个结构通过节点标签考虑了图的异质性，通过边权重考虑了时间序。同时，引入指数遗忘机制，缓慢减少直方图元素的分量，这样在保留信息流的同时可以适应系统状态变化。</li>
-<li>周期性计算图的Sketch。采用HistoSketch算法，把变长且不断更新的直方图周期性地转换成长度相同的Sketch，这种Sketch可以用来计算相似度，并且本身也提供了指数遗忘和对Concept-Drift的支持。</li>
-<li>构造正常运行时系统行为的模型。通过定期生成Sketch形成描述正常行为的Cluster，同时并不修改这些模型保证攻击行为不会污染模型。</li>
-</ol>
-<h3 id="Histogram"><a href="#Histogram" class="headerlink" title="Histogram"></a>Histogram</h3><p>直方图生成核心是1维WL算法的变种：</p>
-<ul>
-<li>概括来说就是通过迭代和重标签，逐步概括每一个节点周围的节点的结构信息（准确来说，是以每个节点为根的生成子树），生成一个直方图。最初用来比较小规模图的结构相似性。</li>
-<li>针对原算法的改进：<ul>
-<li>引入边标签，并将边标签也考虑到新的Label的生成过程中（原算法只有节点有标签）。</li>
-<li>引入边的时间戳，在原算法的Label排序过程中利用时间戳进行排序。</li>
-</ul>
-</li>
-</ul>
-<p>适应流式系统的优化：</p>
-<ul>
-<li>在流式设计中，只对新的节点和新节点邻域内的节点运行一遍算法，这样就显著减少了计算量。</li>
-<li><strong>偏序性</strong>：SOTA的Provenance记录系统应该保持偏序性，也就是说对于每个节点，其入边都会比出边早一步到达。在CamFlow这种用节点的Version来区分节点的系统，更新操作只需要在边对应的目标节点中进行。</li>
-</ul>
-<p>遗忘机制：</p>
-<p>UNICORN在直方图生成上就直接引入了遗忘机制，在直方图构建时就按照时间将历史数据乘以与时间相关的权重。</p>
-<h3 id="Sketch"><a href="#Sketch" class="headerlink" title="Sketch"></a>Sketch</h3><p>从Histogram生成Sketch这一步比较简单，根据数据的Streaming（在线更新）和Histogram分量非固定的特点，采用<strong>HistoSketch</strong>方法将一个Histogram转换为定长的Sketch。</p>
-<h3 id="模型构建和异常检测"><a href="#模型构建和异常检测" class="headerlink" title="模型构建和异常检测"></a>模型构建和异常检测</h3><p>Sketch生成后，采用K-medoids算法进行分组，分组情况用Silhouette参数进行调优，对每一个Sketch赋予最佳分组号。</p>
-<p>（K-medoids算法是常见的K-means算法的变种，将每个Cluster的中心作为分组基准；Silhouette是基于相似性提出的分组评价依据，衡量每个分组内元素的平均相似度）</p>
-<p>通过定期生成Sketch并进行归类，可以形成一个Instance上系统运行的状态转移序列，这个状态转移序列就成为系统行为的建模。在部署时进行同样的步骤，对于每个Sketch的归类，如果和当前/下一状态的分类不同，则判定为异常。</p>
-<h2 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a>Implementation</h2><p>涉及到Provenance信息采集的部分基于CamFlow：</p>
-<ul>
-<li>基于Linux Security Models（LSM）框架来确保高质量和可靠的信息流追踪和记录</li>
-<li>LSM解决了常见Syscall记录系统的竞争条件问题，通过将记录点直接设置在内核中而不是系统调用界面</li>
-</ul>
-<p>涉及到的图处理基于GraphChi：</p>
-<ul>
-<li>GraphChi是基于磁盘而非内存的图处理系统，可以很快地在规模很大的图上进行运算</li>
-<li>GraphChi在内部用平行滑窗（PSW）算法把图分成边数类似的Shard，在每一个Shard上进行并行计算以加快速度</li>
-<li>GraphChi的IO模型和批量操作使得图可以存储在磁盘当中，且在计算时保持相当的性能</li>
-</ul>
-<h2 id="Evaluation"><a href="#Evaluation" class="headerlink" title="Evaluation"></a>Evaluation</h2><p>UNICORN评估角度：</p>
-<ol>
-<li>准确性</li>
-<li>哪些设计上的考虑比较重要</li>
-<li>指数遗忘的策略是否有效</li>
-<li>系统长期运行建模的有效性对比</li>
-<li>速度，是否满足实时性要求</li>
-<li>内存、CPU使用</li>
-</ol>
-<blockquote>
-<p>Testing guidelines: Benchmarking crimes: an emerging threat in systems security</p>
-</blockquote>
-<h3 id="和StreamSpot比较"><a href="#和StreamSpot比较" class="headerlink" title="和StreamSpot比较"></a>和StreamSpot比较</h3><p>StreamSpot数据集：</p>
-<ul>
-<li>6个情景，其中5个对应Benign情形，有1个情景中发生了攻击事件，主要对应浏览器浏览行为</li>
-<li>通过自动化，每个情景重复100遍，对应100个Graph，用Linux下的SystemTap系统记录所有Syscall</li>
-</ul>
-<p>与StreamSpot的比较：</p>
-<ul>
-<li>主要参数是图算法中的迭代参数R。在UNICORN的实现中，R增大（从1到3）对应着FP案例减少，也对应着算法提取更大范围邻域的信息</li>
-<li>注：文中并未提到具体训练/测试集选取等细节，StreamSpot文章中有相应的分析</li>
-</ul>
-<h3 id="DARPA-TC-数据集测试"><a href="#DARPA-TC-数据集测试" class="headerlink" title="DARPA TC 数据集测试"></a>DARPA TC 数据集测试</h3><ul>
-<li>总共3次实验，分别有Benign情形和APT攻击情形</li>
-<li>训练/测试集分割：每次实验数据中90%划分为训练数据，10%为测试数据</li>
-<li>结果：正确率极高，在三次实验中正确率达到98%以上。但文中并未说明这个正确率计算的<strong>载体</strong>（即这个正确率是节点正确率还是攻击检测正确率）。</li>
-</ul>
-<h3 id="参数选取问题"><a href="#参数选取问题" class="headerlink" title="参数选取问题"></a>参数选取问题</h3><p>UNICORN有如下参数：</p>
-<ul>
-<li>跳数/邻居半径。过小则无法提取足够信息，过大则会包括噪音。测试中3为最好。</li>
-<li>Sketch大小。过大虽然可以包含更多信息，但也会导致维度爆炸。2000为最佳。</li>
-<li>Sketch生成周期（以边数为单位）。过大则无法准确记录状态变化。3000为最佳。</li>
-</ul>
-<h2 id="Discussion"><a href="#Discussion" class="headerlink" title="Discussion"></a>Discussion</h2><h3 id="Anomaly"><a href="#Anomaly" class="headerlink" title="Anomaly"></a>Anomaly</h3><p>问题（基于异常行为检测的方法存在的通病）：</p>
-<ul>
-<li>需要一段训练的时间，假设在这段时间内系统中只会有Benign行为，并且能够全面捕捉到。</li>
-<li>在训练期内发生的行为概括了绝大部分Benign行为。因此如果发生了新的Benign行为，就会产生FP。</li>
-<li>同样，由于需要对状态进行建模，当系统状态被人为大幅改变时就会出现问题（比如备份还原）。</li>
-</ul>
-<p>UNICORN的改进点：</p>
-<ul>
-<li>UNICORN的算法更高效，能够稳定、高效、连续地对大规模系统进行建模。</li>
-<li>UNICORN的图算法捕捉了范围更大的子图结构，因此能够总结更多的局部图信息，也就更难进行欺骗性攻击（mimicry attack）。</li>
-<li>UNICORN的CWS算法引入了随机性，并不保证能通过模仿正常节点的特征来进行欺骗性攻击。</li>
-</ul>
-<h3 id="False-Alarm"><a href="#False-Alarm" class="headerlink" title="False Alarm"></a>False Alarm</h3><p>问题：</p>
-<ul>
-<li>UNICORN本质上是静态模型，来避免攻击行为污染模型。（实际上UNICORN定时从Provenance Graph生成Sketch作为当前系统运行状态的Snapshot；而模型一旦建立就不再改变）</li>
-<li>由于静态模型的局限性，当正常的系统行为模式改变时，就会产生很多FP。</li>
-</ul>
-<p>UNICORN的改进点：</p>
-<ul>
-<li>通过HistoSketch引入Concept Drift，用于捕捉系统在正常运行的过程中产生的特征变化，并且避免产生过多的FP。</li>
-</ul>
-<h3 id="图分析"><a href="#图分析" class="headerlink" title="图分析"></a>图分析</h3><p>问题：</p>
-<ul>
-<li>图算法实际上有很多参数（最重要的参数可能是邻域半径R），如何确定参数是一个重要的问题。</li>
-</ul>
-<p>UNICORN的Argument：</p>
-<ul>
-<li>使用OpenTuner进行参数自动优化，自动选择最优参数。</li>
-<li>对所有的测试都使用了相同的参数，具有稳定性。</li>
-</ul>
-<h3 id="系统行为同质性"><a href="#系统行为同质性" class="headerlink" title="系统行为同质性"></a>系统行为同质性</h3><p>讨论：</p>
-<ul>
-<li>StreamSpot数据集是对近乎同质的行为进行重复建模（主要是网页浏览等行为）。</li>
-<li>UNICORN在StreamSpot上效果更好，说明这种方法在行为预定义的Host上效果更好。</li>
-<li>而在Workstation这种环境下，APT攻击检测就更加困难。</li>
-</ul>
-<h3 id="数据集和交叉验证"><a href="#数据集和交叉验证" class="headerlink" title="数据集和交叉验证"></a>数据集和交叉验证</h3><p>讨论：</p>
-<ul>
-<li>现有数据比较少，很多数据是过期数据，或者无法直接构成Provenance Graph，需要翻译。</li>
-<li>现有IDS的研究很多未开源，且采用自己的数据集，这些数据集的产生也未详述。</li>
-<li>这就导致系统之间的比较十分困难。</li>
-</ul>
-<h2 id="Related-Work"><a href="#Related-Work" class="headerlink" title="Related Work"></a>Related Work</h2><h3 id="Intrusion-Detection"><a href="#Intrusion-Detection" class="headerlink" title="Intrusion Detection"></a>Intrusion Detection</h3><ul>
-<li>定长的Syscall序列来定位攻击，推广到可变长度的特征序列。但准确性较低，无法应付复杂情形。（37 -&gt; 29，127）</li>
-<li>为Syscall添加状态来提供上下文信息，用有限状态机进行行为建模。（109，36，62，81）但这种方法复杂度高于多项式复杂度，可行性较差。</li>
-<li>总结性文章：113，78（扩展26，68，91）</li>
-</ul>
-<h3 id="Provenance"><a href="#Provenance" class="headerlink" title="Provenance"></a>Provenance</h3><p>初步工作：</p>
-<ul>
-<li>BackTracker：通过分析Provenance Graph找到攻击入口点。</li>
-<li>PriorTracker：通过为节点赋予优先级简化分析过程，并引入前向分析找出攻击路径。</li>
-<li>HERCULE：用Community Detection算法找出包含攻击路径的Community。</li>
-<li>Winnower：在Povenance Graph上进行语义推断，以减少Provenance数据导致的存储和网络需求。</li>
-<li>NoDoze：在Provenance Graph上实现攻击分流（attack triage），鉴别可疑的路径。</li>
-<li>CamQuery：基于CamFlow，提出了能够实时分析Provenance Graph的框架，也说明Provenance Graph在APT分析方面很有价值。</li>
-</ul>
-<p>进一步工作：</p>
-<ul>
-<li>SLEUTH和HOLMES，注重于利用provenance数据进行攻击溯源和重建。背景框架是【Identifying the provenance of correlated anomalies】，都需要先验知识。</li>
-<li>Poirot同样也是依赖先验信息，通过匹配攻击入口点来追踪APT。一般是通过专业的报告来找到这些入口点。</li>
-</ul>
-<h2 id="参考文献分类"><a href="#参考文献分类" class="headerlink" title="参考文献分类"></a>参考文献分类</h2><blockquote>
-<p>异常行为检测：</p>
-<p>114: Automated response using system-call delay<br>130: A sharper sense of self: Probabilistic reasoning of program behaviors for anomaly detection with context sensitivity<br>36: Anomaly detection using call stack information<br>81: Detecting intrusions through system call sequence and argument analysis<br>92: Exploiting execution context for the detection of anomalous system calls<br>109: A fast automatonbased method for detecting anomalous program behaviors</p>
-<p>APT+图分析：</p>
-<p>15: Mining data provenance to detect advanced persistent threats<br>19: Aggregating unsupervised provenance anomaly detectors<br>83: Fast memory-efficient anomaly detection in streaming heterogeneous graphs<br>87: Holmes: Real-time apt detection through correlation of suspicious information flows<br>55: Nodoze: Combatting threat alert fatigue with automated provenance triage<br>53: Frappuccino: fault-detection through runtime analysis of provenance</p>
-<p>Syscall相关的APT分析：</p>
-<p>37: A sense of self for unix processes<br>134: A markov chain model of temporal behavior for anomaly detection<br>61: Consistency analysis of authorization hook placement in the linux security modules framework<br>123: A markov chain model of temporal behavior for anomaly detection<br>43: Traps and pitfalls: Practical problems in system call interposition based security tools</p>
-<p>存在的问题讨论：</p>
-<p>125: Exploiting concurrency vulnerabilities in system call wrappers<br>98: A practical mimicry attack against powerful system-call monitors</p>
-</blockquote>
 
       
     </div>
@@ -786,9 +683,13 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-count">5</span>
           <span class="site-state-item-name">posts</span>
         </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
       </div>
   </nav>
 </div>

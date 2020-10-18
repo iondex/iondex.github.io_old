@@ -20,19 +20,20 @@
     var CONFIG = {"hostname":"iondex.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="参考： Clang-TutorSlideLibTooling  LibTooling是LLVM提供的，用于编写基于Clang的独立命令行工具（Standalone Commandline Tool）的工具库。 和LibClang（提供一个基于Index和Cursor的C API）相比，LibTooling基于C++且功能更为强大，但由于功能更接近于Clang的核心，API更加复杂且不稳定，很可能">
+  <meta name="description" content="OSDI’18REPT: Reverse Debugging of Failures in Deployed Software微软Cui Weidong团队作品。 Binary级别的reverse debugging文章，思路是结合online的轻量级tracing（实现中是Intel PT）进行控制和信息记录，及离线的执行信息还原。 Finding Crash-Consistency Bugs">
 <meta property="og:type" content="article">
-<meta property="og:title" content="编写Clang独立命令行工具">
-<meta property="og:url" content="http://iondex.github.io/2020/08/20/clang-standalone-tool/index.html">
+<meta property="og:title" content="OSDI 文献概览">
+<meta property="og:url" content="http://iondex.github.io/2020/10/14/osdi-papers/index.html">
 <meta property="og:site_name" content="Iondex&#39;s Blog">
-<meta property="og:description" content="参考： Clang-TutorSlideLibTooling  LibTooling是LLVM提供的，用于编写基于Clang的独立命令行工具（Standalone Commandline Tool）的工具库。 和LibClang（提供一个基于Index和Cursor的C API）相比，LibTooling基于C++且功能更为强大，但由于功能更接近于Clang的核心，API更加复杂且不稳定，很可能">
+<meta property="og:description" content="OSDI’18REPT: Reverse Debugging of Failures in Deployed Software微软Cui Weidong团队作品。 Binary级别的reverse debugging文章，思路是结合online的轻量级tracing（实现中是Intel PT）进行控制和信息记录，及离线的执行信息还原。 Finding Crash-Consistency Bugs">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2020-08-20T03:58:08.000Z">
-<meta property="article:modified_time" content="2020-10-14T11:26:37.328Z">
+<meta property="article:published_time" content="2020-10-14T12:02:07.000Z">
+<meta property="article:modified_time" content="2020-10-15T04:53:38.249Z">
 <meta property="article:author" content="iondex">
+<meta property="article:tag" content="文献阅读">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://iondex.github.io/2020/08/20/clang-standalone-tool/">
+<link rel="canonical" href="http://iondex.github.io/2020/10/14/osdi-papers/">
 
 
 <script id="page-configurations">
@@ -45,7 +46,7 @@
   };
 </script>
 
-  <title>编写Clang独立命令行工具 | Iondex's Blog</title>
+  <title>OSDI 文献概览 | Iondex's Blog</title>
   
 
 
@@ -150,7 +151,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://iondex.github.io/2020/08/20/clang-standalone-tool/">
+    <link itemprop="mainEntityOfPage" href="http://iondex.github.io/2020/10/14/osdi-papers/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -163,7 +164,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          编写Clang独立命令行工具
+          OSDI 文献概览
         </h1>
 
         <div class="post-meta">
@@ -173,14 +174,14 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2020-08-20 11:58:08" itemprop="dateCreated datePublished" datetime="2020-08-20T11:58:08+08:00">2020-08-20</time>
+              <time title="Created: 2020-10-14 20:02:07" itemprop="dateCreated datePublished" datetime="2020-10-14T20:02:07+08:00">2020-10-14</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-10-14 19:26:37" itemprop="dateModified" datetime="2020-10-14T19:26:37+08:00">2020-10-14</time>
+                <time title="Modified: 2020-10-15 12:53:38" itemprop="dateModified" datetime="2020-10-15T12:53:38+08:00">2020-10-15</time>
               </span>
 
           
@@ -194,13 +195,17 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <blockquote>
-<p>参考：</p>
-<p><a target="_blank" rel="noopener" href="https://github.com/banach-space/clang-tutor">Clang-Tutor</a><br><a target="_blank" rel="noopener" href="https://s3.amazonaws.com/connect.linaro.org/yvr18/presentations/yvr18-223.pdf">Slide</a><br><a target="_blank" rel="noopener" href="https://clang.llvm.org/docs/LibTooling.html">LibTooling</a></p>
-</blockquote>
-<p>LibTooling是LLVM提供的，用于编写基于Clang的独立命令行工具（Standalone Commandline Tool）的工具库。</p>
-<p>和LibClang（提供一个基于Index和Cursor的C API）相比，LibTooling基于C++且功能更为强大，但由于功能更接近于Clang的核心，API更加复杂且不稳定，很可能随着Clang版本的变化导致API变化。</p>
-
+        <h2 id="OSDI’18"><a href="#OSDI’18" class="headerlink" title="OSDI’18"></a>OSDI’18</h2><h3 id="REPT-Reverse-Debugging-of-Failures-in-Deployed-Software"><a href="#REPT-Reverse-Debugging-of-Failures-in-Deployed-Software" class="headerlink" title="REPT: Reverse Debugging of Failures in Deployed Software"></a>REPT: Reverse Debugging of Failures in Deployed Software</h3><p>微软Cui Weidong团队作品。</p>
+<p>Binary级别的reverse debugging文章，思路是结合online的轻量级tracing（实现中是Intel PT）进行控制和信息记录，及离线的执行信息还原。</p>
+<h3 id="Finding-Crash-Consistency-Bugs-with-Bounded-Black-Box-Crash-Testing"><a href="#Finding-Crash-Consistency-Bugs-with-Bounded-Black-Box-Crash-Testing" class="headerlink" title="Finding Crash-Consistency Bugs with Bounded Black-Box Crash Testing"></a>Finding Crash-Consistency Bugs with Bounded Black-Box Crash Testing</h3><p>分析文件系统的Crash，通过文件系统的黑盒fuzzing。基本思想是生成一串workload交由文件系统操作。</p>
+<p>难点在于workload空间是无限的，解决方法是限制这个空间（比如说可以进行的操作、操作数量等）。</p>
+<p>提到了一个insight，认为文件系统的crash绝大多数都可以在一个全新的文件系统上执行几步workload就可以触发。</p>
+<p>文章发现了之前5年发现的24个Linux文件系统bug，且发现了10个新的bug。</p>
+<h3 id="Graviton-Trusted-Execution-Environments-on-GPUs"><a href="#Graviton-Trusted-Execution-Environments-on-GPUs" class="headerlink" title="Graviton: Trusted Execution Environments on GPUs"></a>Graviton: Trusted Execution Environments on GPUs</h3><p>在GPU上实现Trusted Execution（TE）的文章。卖点在于对现有系统的破坏比较小（只需要修改诸如GPU命令处理器等边缘设备）。</p>
+<p>缺点在于overhead比较大（17%-33%），且overhead集中于发送及接收数据带来的加/解密运算。</p>
+<h3 id="ZebRAM-Comprehensive-and-Compatible-Software-Protection-Against-Rowhammer-Attacks"><a href="#ZebRAM-Comprehensive-and-Compatible-Software-Protection-Against-Rowhammer-Attacks" class="headerlink" title="ZebRAM: Comprehensive and Compatible Software Protection Against Rowhammer Attacks"></a>ZebRAM: Comprehensive and Compatible Software Protection Against Rowhammer Attacks</h3><p>Rowhammer attack：由于现代内存（DRAM）中数据的存储单元（cell）密度极大，所以当非常频繁地读取一个单元的数据时有可能导致该单元的电压泄露，影响相邻的行（row）上的数据（比如导致位反转）。</p>
+<p>Rowhammer attack会影响当前内存cell周围的<strong>行</strong>。因此ZebRAM使用纯软件的方式将内存行隔开以防止Rowhammer attack。</p>
+<h2 id="OSDI’16"><a href="#OSDI’16" class="headerlink" title="OSDI’16"></a>OSDI’16</h2><h3 id="Push-Button-Verification-of-File-Systems-via-Crash-Refinement"><a href="#Push-Button-Verification-of-File-Systems-via-Crash-Refinement" class="headerlink" title="Push-Button Verification of File Systems via Crash Refinement"></a>Push-Button Verification of File Systems via Crash Refinement</h3>
     </div>
 
     
@@ -208,6 +213,9 @@
     
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB/" rel="tag"># 文献阅读</a>
+          </div>
 
         
 
@@ -215,12 +223,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/08/16/android-related-papers/" rel="prev" title="Android Fuzzing/程序分析 相关文献">
-      <i class="fa fa-chevron-left"></i> Android Fuzzing/程序分析 相关文献
+    <a href="/2020/08/20/clang-standalone-tool/" rel="prev" title="编写Clang独立命令行工具">
+      <i class="fa fa-chevron-left"></i> 编写Clang独立命令行工具
     </a></div>
       <div class="post-nav-item">
-    <a href="/2020/10/14/osdi-papers/" rel="next" title="OSDI 文献概览">
-      OSDI 文献概览 <i class="fa fa-chevron-right"></i>
+    <a href="/2020/10/15/ase-2019-papers/" rel="next" title="ASE'19 文章概览">
+      ASE'19 文章概览 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -280,6 +288,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#OSDI%E2%80%9918"><span class="nav-number">1.</span> <span class="nav-text">OSDI’18</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#REPT-Reverse-Debugging-of-Failures-in-Deployed-Software"><span class="nav-number">1.1.</span> <span class="nav-text">REPT: Reverse Debugging of Failures in Deployed Software</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Finding-Crash-Consistency-Bugs-with-Bounded-Black-Box-Crash-Testing"><span class="nav-number">1.2.</span> <span class="nav-text">Finding Crash-Consistency Bugs with Bounded Black-Box Crash Testing</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Graviton-Trusted-Execution-Environments-on-GPUs"><span class="nav-number">1.3.</span> <span class="nav-text">Graviton: Trusted Execution Environments on GPUs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ZebRAM-Comprehensive-and-Compatible-Software-Protection-Against-Rowhammer-Attacks"><span class="nav-number">1.4.</span> <span class="nav-text">ZebRAM: Comprehensive and Compatible Software Protection Against Rowhammer Attacks</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#OSDI%E2%80%9916"><span class="nav-number">2.</span> <span class="nav-text">OSDI’16</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Push-Button-Verification-of-File-Systems-via-Crash-Refinement"><span class="nav-number">2.1.</span> <span class="nav-text">Push-Button Verification of File Systems via Crash Refinement</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
